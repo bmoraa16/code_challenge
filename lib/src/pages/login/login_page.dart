@@ -1,6 +1,7 @@
 import 'package:code_challenge/src/pages/home/home.dart';
 import 'package:code_challenge/src/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../utils/colors.dart';
 import '../../utils/string_validator.dart';
@@ -90,6 +91,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 filled: true),
             validator: validatorField,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(new RegExp(r"\s\b|\b\s"))
+            ],
           )
         ],
       ),
@@ -119,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField(rfc, (value) => StringValidator.validateInput(value!)),
+        _entryField(rfc, (value) => StringValidator.validateRFC(value!)),
         _entryField(email, (value) => StringValidator.validateEmail(value!)),
       ],
     );

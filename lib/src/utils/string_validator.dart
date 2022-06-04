@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class StringValidator {
-  static String? validateName(String value) {
-    String pattern = r'(^[a-zA-ZáéíóúÁÉÍÓÚäÄëËïÏöÖüÜ\u00f1\u00d1 ]*$)';
+  static String? validateRFC(String value) {
+    String pattern =
+        r'(^^[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]$)';
     RegExp regExp = RegExp(pattern);
 
     if (value.isEmpty) {
