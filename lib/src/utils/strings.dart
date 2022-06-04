@@ -19,7 +19,6 @@ const String nasdaq = 'NASDAQ';
 const String nikkei = 'Nikkei 225';
 const String dax = 'DAX Index';
 
-
 //CONST DATA
 const String days = 'Últimos 10 días';
 const String date = 'Fecha';
@@ -29,6 +28,7 @@ const String low = 'Bajo';
 const String close = 'Cierre*';
 const String adjClose = 'Cierre ajustado**';
 const String volume = 'Volumen';
-const String closeNote = '*Precio de cierre ajustado para división de acciones.';
-const String closeNote2 = '** Precio de cierre ajustado por divisiones de acciones y distribuciones de dividendos y/o ganancias de capital.';
-
+const String closeNote =
+    '* Precio de cierre ajustado para división de acciones.';
+const String closeNote2 =
+    '** Precio de cierre ajustado por divisiones de acciones y distribuciones de dividendos y/o ganancias de capital.';

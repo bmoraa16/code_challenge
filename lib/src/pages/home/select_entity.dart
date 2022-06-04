@@ -1,4 +1,5 @@
 import 'package:code_challenge/src/pages/login/login_page.dart';
+import 'package:code_challenge/src/utils/shared_prefences.dart';
 import 'package:code_challenge/src/utils/strings.dart';
 import 'package:flutter/material.dart';
 
@@ -48,15 +49,32 @@ class _SelectEntityPageState extends State<SelectEntityPage> {
                   GeneralButtonWidget(
                       buttonText: nasdaq,
                       onpressed: () => {
+                            MyAppPreferences.setEntityName("NDAQ"),
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const EntityDataPage()))
                           }),
                   SizedBox(height: height * .05),
-                  GeneralButtonWidget(buttonText: nikkei, onpressed: () => {}),
+                  GeneralButtonWidget(
+                      buttonText: nikkei,
+                      onpressed: () => {
+                            MyAppPreferences.setEntityName("^N225"),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const EntityDataPage()))
+                          }),
                   SizedBox(height: height * .05),
-                  GeneralButtonWidget(buttonText: dax, onpressed: () => {}),
+                  GeneralButtonWidget(
+                      buttonText: dax,
+                      onpressed: () => {
+                            MyAppPreferences.setEntityName("DAX"),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const EntityDataPage()))
+                          }),
                   //_divider(),
                   SizedBox(height: height * .055),
                 ],

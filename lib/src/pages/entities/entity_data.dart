@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +13,10 @@ import '../../widgets/general_button.dart';
 import 'package:intl/intl.dart';
 
 class EntityDataPage extends StatefulWidget {
-  const EntityDataPage({Key? key, this.title}) : super(key: key);
+  const EntityDataPage({
+    Key? key,
+    this.title,
+  }) : super(key: key);
 
   final String? title;
 
@@ -33,40 +37,42 @@ class _EntityDataPageState extends State<EntityDataPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Scaffold(
-        body: SizedBox(
-      height: height,
-      width: width,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .25,
-              right: -MediaQuery.of(context).size.width * .45,
-              child: const BezierContainer()),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .1),
-                  _title(),
-                  SizedBox(height: height * .1),
-                  Container(
-                    color: Colors.green,
-                    width: MediaQuery.of(context).size.width,
-                    child: _buildListData(),
-                  ),
-                  SizedBox(height: height * .055),
-                ],
+    return SafeArea(
+      child: Scaffold(
+          body: SizedBox(
+        height: height,
+        width: width,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+                top: -height * .25,
+                right: -MediaQuery.of(context).size.width * .45,
+                child: const BezierContainer()),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _backButton(),
+                    SizedBox(height: height * .1),
+                    _title(),
+                    SizedBox(height: height * .1),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: _buildListData(),
+                    ),
+                    SizedBox(height: height * .055),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(top: 40, left: 0, child: _backButton()),
-        ],
-      ),
-    ));
+            //Positioned(top: 40, left: 0, child: _backButton()),
+          ],
+        ),
+      )),
+    );
   }
 
   _buildListData() {
@@ -145,87 +151,93 @@ class _EntityDataPageState extends State<EntityDataPage> {
             fontSize: 24, fontWeight: FontWeight.w700, color: primaryPurple));
   }
 
-  _dataTable(BuildContext context, HistoricalDataModel model) {
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          var a = model.chart!.result![0].timestamp!;
-          return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: index,
-              itemBuilder: ((contextb, indexA) {
-                print("PRUEBA:$indexA");
-                return Text(Utils.readTimestamp(indexA));
-              }));
-
-          /*
-          return Text(
-              // "${model.chart!.result![index].indicators!.quote!.map((e) => null).toList()}"//quizas es con .map
-              //"${model.chart!.result![0].timestamp!}" //quizas es con .map
-              bi.toString());
-          */
-        });
-  }
-
   _pruebatable(BuildContext context, HistoricalDataModel model) {
     var timestampData = model.chart!.result![0].timestamp!;
     var openData = model.chart!.result![0].indicators!.quote![0].open!;
-    var highData = model.chart!.result![0].indicators!.quote![0].high;
-    var lowData = model.chart!.result![0].indicators!.quote![0].low;
-    var closeData = model.chart!.result![0].indicators!.quote![0].close;
-    var volumeData = model.chart!.result![0].indicators!.quote![0].volume;
-    var adjCloseData = model.chart!.result![0].indicators!.adjclose;
-    return Table(
-      children: [
-        const TableRow(children: [
-          Text(date),
-          Text(open),
-          Text(high),
-          Text(low),
-          Text(close),
-          Text(adjClose),
-          Text(volume)
-        ]),
-        TableRow(children: [
-          ListView.separated(
-            shrinkWrap: true,
-            itemCount: timestampData.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(height: 10);
-            },
-            itemBuilder: (context, index) {
-              return Text(Utils.readTimestamp(timestampData[index]));
-            },
+    var highData = model.chart!.result![0].indicators!.quote![0].high!;
+    var lowData = model.chart!.result![0].indicators!.quote![0].low!;
+    var closeData = model.chart!.result![0].indicators!.quote![0].close!;
+    var volumeData = model.chart!.result![0].indicators!.quote![0].volume!;
+    var adjCloseData =
+        model.chart!.result![0].indicators!.adjclose![0].adjclose!;
+    List<DataRow> dataRowsFinal = [];
+
+    for (var i = 0; i < timestampData.length; i++) {
+      dataRowsFinal.add(DataRow(cells: [
+        DataCell(Text(Utils.readTimestamp(timestampData[i]))),
+        DataCell(Text(openData[i].toString())),
+        DataCell(Text(highData[i].toString())),
+        DataCell(Text(lowData[i].toString())),
+        DataCell(Text(closeData[i].toString())),
+        DataCell(Text(adjCloseData[i].toString())),
+        DataCell(Text(volumeData[i].toString())),
+      ]));
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DataTable(
+            showBottomBorder: true,
+            headingTextStyle: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.white),
+            headingRowColor:
+                MaterialStateProperty.resolveWith((states) => malibu),
+            columns: const [
+              DataColumn(
+                label: Center(
+                  child: Text(
+                    date,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(open),
+              ),
+              DataColumn(
+                label: Text(high),
+              ),
+              DataColumn(
+                label: Text(low),
+              ),
+              DataColumn(
+                label: Text(close),
+              ),
+              DataColumn(
+                label: Text(adjClose),
+              ),
+              DataColumn(
+                label: Text(volume),
+              ),
+            ],
+            rows: dataRowsFinal,
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            itemCount: openData.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(height: 10);
-            },
-            itemBuilder: (context, index) {
-              return Text(openData[index].toString());
-            },
-          ),
-          //_dataList(timestampData.length,Utils.readTimestamp(timestampData.toString())),
-        ])
-      ],
+          SizedBox(height: MediaQuery.of(context).size.width * .05),
+          SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: const Text(closeNote)),
+          SizedBox(height: MediaQuery.of(context).size.width * .01),
+          SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: const Text(closeNote2)),
+        ],
+      ),
     );
   }
 
-  _dataList(int itemCountData,  List<int> textData){
+  _dataList(int itemCountData, List<dynamic> textData) {
     return ListView.separated(
-            shrinkWrap: true,
-            itemCount: itemCountData,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(height: 10);
-            },
-            itemBuilder: (context, index) {
-              return Text(textData[index].toString());
-            },
-          );
+      shrinkWrap: true,
+      itemCount: itemCountData,
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(height: 10);
+      },
+      itemBuilder: (context, index) {
+        return Text(textData[index].toString());
+      },
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:code_challenge/bloc/home/home_bloc.dart';
+import 'package:code_challenge/src/utils/shared_prefences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'src/utils/routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  MyAppPreferences();
   runApp(const MyApp());
 }
 
@@ -33,7 +35,6 @@ class MyApp extends StatelessWidget {
     );
     */
 
-    
     return RepositoryProvider(
       create: (context) => ApiRepository(),
       child: MultiBlocProvider(
@@ -45,12 +46,10 @@ class MyApp extends StatelessWidget {
           initialRoute: splashScreen,
           routes: {
             splashScreen: (BuildContext context) => const SplashScreenPage(),
-        login: (BuildContext context) => const LoginPage(),
+            login: (BuildContext context) => const LoginPage(),
           },
         ),
       ),
     );
-
-    
   }
 }

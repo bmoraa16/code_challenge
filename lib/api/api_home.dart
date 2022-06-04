@@ -5,10 +5,9 @@ import '../models/historical_data_model.dart';
 import '../src/utils/api_constants.dart';
 
 class APIHome {
-  
-  Future<HistoricalDataModel> homePageData(String entityName) async {    
+  Future<HistoricalDataModel> homePageData(String entityName) async {
     http.Response responseHomeData = await http.get(
-      Uri.parse(apiHomeService + entityName+range),
+      Uri.parse(apiHomeService + entityName + range),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -20,14 +19,4 @@ class APIHome {
     HistoricalDataModel bodyFinal = HistoricalDataModel.fromJson(body);
     return bodyFinal;
   }
-/*
-  Future<HistoricalDataModel> homePageData(String entityName) async {
-  try {
-    var response = await Dio().get(apiHomeService + entityName+range);
-    print(response);
-  } catch (e) {
-    print(e);
-  }
-}*/
-
 }
