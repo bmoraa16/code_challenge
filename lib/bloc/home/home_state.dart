@@ -15,13 +15,6 @@ class HomeLoaded extends HomeState {
   const HomeLoaded(this.vacants);
 }
 
-/*
-class HomeVacantSelected extends HomeState{
-  final LstVacantesTO vacantSelected;
-  const HomeVacantSelected(this.vacantSelected);
-}
-*/
-
 class HomeError extends HomeState {
   final String? error;
   const HomeError(this.error);

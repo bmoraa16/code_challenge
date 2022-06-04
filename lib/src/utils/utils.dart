@@ -19,13 +19,10 @@ class Utils {
   }
 
   static String readTimestamp(int timestamp) {
-    
-    var format = DateFormat('yyyy-MM-dd');
+    var format = DateFormat('dd-MM-yyyy');
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-    
     var time = '';
     time = format.format(date);
-
     return time;
   }
 }

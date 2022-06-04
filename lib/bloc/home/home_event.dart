@@ -8,9 +8,3 @@ abstract class HomeEvent {
 
 class HomeVacantsList extends HomeEvent {}
 
-/*
-class HomeVacantTapped extends HomeEvent {
-  final HistoricalDataModel vacantSelected;
-  const HomeVacantTapped(this.vacantSelected);
-}
-*/
