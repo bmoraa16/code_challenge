@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../utils/colors.dart';
 import '../../utils/string_validator.dart';
+import '../../utils/upper_case_formater.dart';
 import '../../widgets/bezier_container.dart';
 import '../../widgets/general_button.dart';
 
@@ -18,6 +19,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController rfcCtrl = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -26,47 +30,58 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-        body: SizedBox(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: const BezierContainer()),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .2),
-                  _title(),
-                  const SizedBox(height: 50),
-                  _emailPasswordWidget(),
-                  const SizedBox(height: 20),
-                  GeneralButtonWidget(
-                      buttonText: login,
-                      onpressed: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const HomePage()))
-                          }),
-                  //_divider(),
-                  SizedBox(height: height * .055),
-                ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+          body: SizedBox(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+                top: -height * .15,
+                right: -MediaQuery.of(context).size.width * .4,
+                child: const BezierContainer()),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .2),
+                    _title(),
+                    const SizedBox(height: 50),
+                    _emailPasswordWidget(),
+                    const SizedBox(height: 20),
+                    GeneralButtonWidget(
+                        buttonText: login,
+                        onpressed: () => {
+                              if (_formKey.currentState!.validate())
+                                {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => const HomePage()))
+                                }
+                            }),
+                    //_divider(),
+                    SizedBox(height: height * .055),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    ));
+          ],
+        ),
+      )),
+    );
   }
 
-  Widget _entryField(String title, dynamic validatorField) {
+  Widget _entryField(
+      String title,
+      dynamic validatorField,
+      TextEditingController controllerField,
+      List<TextInputFormatter> formatersRule,
+      int maxLengthValue) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -80,6 +95,8 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextFormField(
+            controller: controllerField,
+            maxLength: maxLengthValue,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: const BorderSide(color: neutralGrisClaro),
@@ -89,12 +106,15 @@ class _LoginPageState extends State<LoginPage> {
                   borderSide: const BorderSide(color: neutralGrisClaro),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                filled: true),
+                filled: true,
+                counterText: ""),
             validator: validatorField,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(new RegExp(r"\s\b|\b\s"))
+            /*inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))
             ],
+            */
+            inputFormatters: formatersRule,
           )
         ],
       ),
@@ -122,11 +142,29 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField(rfc, (value) => StringValidator.validateRFC(value!)),
-        _entryField(email, (value) => StringValidator.validateEmail(value!)),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          _entryField(
+              rfc,
+              (value) => StringValidator.validateRFC(value!),
+              rfcCtrl,
+              [
+                FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s")),
+                UpperCaseTextFormatter(),
+              ],
+              13),
+          _entryField(
+              email,
+              (value) => StringValidator.validatePassword(value!, rfcCtrl),
+              emailCtrl,
+              [
+                FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s")),
+              ],
+              30),
+        ],
+      ),
     );
   }
 }

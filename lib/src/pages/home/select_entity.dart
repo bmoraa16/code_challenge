@@ -1,4 +1,3 @@
-import 'package:code_challenge/src/pages/login/login_page.dart';
 import 'package:code_challenge/src/utils/shared_prefences.dart';
 import 'package:code_challenge/src/utils/strings.dart';
 import 'package:flutter/material.dart';

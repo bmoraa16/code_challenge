@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,9 +7,6 @@ import '../../utils/colors.dart';
 import '../../utils/strings.dart';
 import '../../utils/utils.dart';
 import '../../widgets/bezier_container.dart';
-import '../../widgets/general_button.dart';
-import 'package:intl/intl.dart';
-
 class EntityDataPage extends StatefulWidget {
   const EntityDataPage({
     Key? key,
@@ -225,19 +220,6 @@ class _EntityDataPageState extends State<EntityDataPage> {
               child: const Text(closeNote2)),
         ],
       ),
-    );
-  }
-
-  _dataList(int itemCountData, List<dynamic> textData) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemCount: itemCountData,
-      separatorBuilder: (BuildContext context, int index) {
-        return const SizedBox(height: 10);
-      },
-      itemBuilder: (context, index) {
-        return Text(textData[index].toString());
-      },
     );
   }
 }

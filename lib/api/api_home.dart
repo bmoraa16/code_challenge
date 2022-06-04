@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import '../models/historical_data_model.dart';
 import '../src/utils/api_constants.dart';

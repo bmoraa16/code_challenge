@@ -9,11 +9,11 @@ class StringValidator {
     if (value.isEmpty) {
       return "Este campo es necesario";
     } else if (!regExp.hasMatch(value)) {
-      return "Solo puede contener letras";
-    } else if (value.length < 3) {
-      return "Minimo 3 caracteres";
-    } else if (value.length > 200) {
-      return "Máximo 200 caracteres";
+      return "Ingresa un RFC válido";
+    } else if (value.length < 12) {
+      return "Minimo 12 caracteres";
+    } else if (value.length > 13) {
+      return "Máximo 13 caracteres";
     } else if (value.trim().isEmpty) {
       return "Este campo está vacio";
     }
@@ -63,12 +63,22 @@ class StringValidator {
 
   static String? validatePassword(
       String value, TextEditingController passwordCtrl) {
-    if (value != passwordCtrl.text) {
-      return "Las contraseñas no coinciden";
+    String pattern =
+        r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$';
+    RegExp regExp = RegExp(pattern);
+    if (value == passwordCtrl.text) {
+      return "Los campos no pueden ser iguales";
     } else if (value.isEmpty) {
       return "Este campo es necesario";
+    } else {
+      if (value.isEmpty) {
+        return "El correo es necesario";
+      } else if (!regExp.hasMatch(value)) {
+        return "Correo invalido";
+      } else {
+        return null;
+      }
     }
-    return null;
   }
 
   static String? emptyPassword(String value) {
@@ -77,6 +87,7 @@ class StringValidator {
     } else if (value.length < 7) {
       return "Minimo 8 caracteres";
     }
+
     return null;
   }
 
